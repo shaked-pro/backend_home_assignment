@@ -1,5 +1,5 @@
 import express from 'express';
-import { getProcurements, addProcurement } from '../services/procurementService';
+import { getProcurements, addProcurement, fetchInventoryData } from '../services/procurementService';
 import { ProcurementStatus } from '../models/ProcurementStatus';
 
 const router = express.Router();
@@ -35,5 +35,18 @@ router.post('/', async (req, res)=> {
         }
     }
 });
+
+router.get('/inventory', async (req, res) => {
+    try {
+        const inventoryData = await fetchInventoryData();
+        res.json(inventoryData);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: error.message });
+        } else {
+            res.status(500).json({ error: 'Unknown error occurred' });
+        }
+    }
+})
 
 export default router;

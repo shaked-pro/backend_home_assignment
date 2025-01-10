@@ -1,0 +1,7 @@
+hey team , wanted to explain my fixes.
+
+1.firstly when looking at the "procurment" model I could see that the "createdAt" field is a date object.
+  the result that is being returned in the "get procurenment" by the ".query" function is of string type.
+
+  since "createdAt" is a date object and ts is refering to it as a string it gets corrupted and becomes invalid.  
+  I mapped the response and for every row I returned a date object with the "cretedAt" field :) 

@@ -1,6 +1,9 @@
 import { Pool } from 'pg';
 import { Procurement } from '../models/procurement';
 import { ProcurementStatus } from '../models/ProcurementStatus';
+import axios from 'axios';
+
+const invertoryServiceUrl = "https://6780ed5385151f714b0887a4.mockapi.io/localhost3002/inventory";
 
 const pool = new Pool({
     user: process.env.DB_USER || 'postgres',
@@ -22,7 +25,9 @@ export const getProcurements = async (): Promise<Procurement[]> => {
     const client = await pool.connect();
     try {
         const result = await client.query('SELECT * FROM procurements');
-        return result.rows;
+        return result.rows.map(row => ({
+            ...row,
+            createdAt: new Date(row.createdAt)}));
     } finally {
         client.release();
     }
@@ -44,4 +49,15 @@ export const addProcurement = async (procurement: Partial<Procurement>): Promise
 
 export const cleanup = async () => {
     await pool.end();
+};
+
+export const fetchInventoryData = async (): Promise<any> => {
+    try {
+        const response = await axios.get("https://6780ed5385151f714b0887a4.mockapi.io/localhost3002/inventory");
+        console.log ('response:', JSON.stringify(response.data));
+        return response.data; // Return structured data from the external API
+    } catch (error) {
+        console.error('Error fetching external data:', error);
+        throw new Error('Failed to fetch data from external API');
+    }
 };
