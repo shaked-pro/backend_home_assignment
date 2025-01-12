@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 import { Vendor } from '../models/vendor';
+import axios from 'axios';
 
 const pool = new Pool({
     user: process.env.DB_USER || 'postgres',
@@ -23,4 +24,37 @@ export const addVendor = async (vendor: Partial<Vendor>): Promise<Vendor> => {
     return result.rows[0];
 };
 
+export const getVendorPercurmentsById = async (vendorId: string) =>{
+    const client = await pool.connect();
+
+    try {
+        // Fetch vendor data from mock API and type the response
+        let response = await axios.get(`http://host.docker.internal:3000/${vendorId}`);
+        let vendor = response.data as { procurements: { id: string, title: string, description: string, items: any[] }[] };
+
+        // Insert procurements into the database
+        for (const procurement of vendor.procurements) {
+            await client.query(
+                `INSERT INTO procurements(id, title, description, items, vendor_id)
+                 VALUES($1, $2, $3, $4, $5)
+                 ON CONFLICT (id) DO NOTHING`,
+                [
+                    procurement.id, // Use procurement.id instead of procurment.id
+                    procurement.title,
+                    procurement.description,
+                    JSON.stringify(procurement.items), // Convert items array to JSON
+                    vendorId,
+                ]
+            );
+        }
+
+        console.log('Mock data inserted successfully!');
+        return vendor;
+    } catch (error) {
+        console.error('Error inserting mock data:', error);
+        throw new Error('Failed to insert mock data');
+    } finally {
+        client.release();
+    }
+};
 

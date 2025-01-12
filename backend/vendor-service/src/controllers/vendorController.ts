@@ -1,7 +1,8 @@
 import express from 'express';
 // import { getVendors, addVendor } from '../services/vendorService';
 import { checkVendorData } from '../models/vendor';
-import {getVendors, addVendor} from '../services/vendorService';
+import { getVendors, addVendor, getVendorPercurmentsById } from '../services/vendorService';
+import { Request, Response } from 'express';
 
 const router = express.Router();
 
@@ -38,5 +39,12 @@ router.post('/', async (req, res) => {
     }
     
 });
+
+router.get('/:id/procurments', async (req: Request, res:Response) => {
+    const vendorId = req.params.id; // Get vendor ID from URL parameter
+    let vendor = getVendorPercurmentsById(vendorId);
+    return res.json(vendor);
+});
+    
 
 export default router;
