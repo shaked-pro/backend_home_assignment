@@ -7,7 +7,7 @@ hey team , wanted to explain my fixes.
   In a real scenario I would opt for the second option and to refactor it, asking the team leader which case to use and to make sure it doesn;t impact other services or functionalities. 
   The mapping is inefficient and in large scale it would flop.
 2.I chose mockapi.io to create an inventory resource and put some mock data inside, in the end I creted an endpoint of localhost:3002/api/procurments/inventoryLevels when the get request
-  is sent that endpoint will return the relevant "inventory" data.*used axios for the requests.  
+  is sent that endpoint will return the relevant "inventory" data.*used axios for the requests. I used the field inventoryLevel for declaring priority. 
 4.I implemented the minQuantiy filter by integrating the param into the url (for example : http://localhost:3002/api/procurements/filter-by-quantity?minQuantity=70). I sent those requests
   via postman to see the results. I sent an SQL query to the DB and added a condition using the keyword "WHERE". I did the same with filter-by-status.	
   
