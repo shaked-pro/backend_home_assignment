@@ -1,6 +1,7 @@
 import express from 'express';
-import { getProcurements, addProcurement, fetchInventoryData } from '../services/procurementService';
+import { getProcurements, addProcurement, fetchInventoryData, getFilteredQuantityProcurements, getFilteredStatusProcurements } from '../services/procurementService';
 import { ProcurementStatus } from '../models/ProcurementStatus';
+import { min } from 'date-fns';
 
 const router = express.Router();
 
@@ -36,7 +37,8 @@ router.post('/', async (req, res)=> {
     }
 });
 
-router.get('/inventory', async (req, res) => {
+// POST /api/procurements
+router.get('/inventoryLevels', async (req, res) => { //task number 2
     try {
         const inventoryData = await fetchInventoryData();
         res.json(inventoryData);
@@ -48,5 +50,39 @@ router.get('/inventory', async (req, res) => {
         }
     }
 })
+
+ //Get   /api/ procurements
+router.get('/filter-by-quantity', async (req, res) => {
+    try {
+        const minQuantity = parseInt(req.query.minQuantity as string, 10); 
+        const procurments = await getFilteredQuantityProcurements(minQuantity);
+        return res.json(procurments);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: error.message });
+        } else {
+            res.status(500).json({ error: 'Unknown error occurred' });
+        }
+    }
+}); //task 4
+
+//Get   /api/procurements
+router.get('/filter-by-status', async (req, res) => {
+    try {
+        const status = (req.query.status);
+        if (typeof status !== 'string') {
+            return res.status(400).json({ error: 'Invalid or missing status query parameter' });
+        }
+        const procurments = await getFilteredStatusProcurements(status);
+        return res.json(procurments);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: error.message });
+        } else {
+            res.status(500).json({ error: 'Unknown error occurred' });
+        }
+    }
+}); //task 4
+
 
 export default router;

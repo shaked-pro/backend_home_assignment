@@ -7,11 +7,6 @@
         "frontend"
     ],
     "dependencies": {
-        "axios": "^1.7.9",
-        "node": "^22.13.0",
         "sourcix-backend-assignment": "file:"
-    },
-    "devDependencies": {
-        "@types/axios": "^0.9.36"
     }
 }

@@ -2,8 +2,9 @@ import { Pool } from 'pg';
 import { Procurement } from '../models/procurement';
 import { ProcurementStatus } from '../models/ProcurementStatus';
 import axios from 'axios';
+import { min, parseISO } from 'date-fns';
 
-const invertoryServiceUrl = "https://6780ed5385151f714b0887a4.mockapi.io/localhost3002/inventory";
+const mockInventory = "https://6780ed5385151f714b0887a4.mockapi.io/api/v1/inventory"; // inventory data task number 2
 
 const pool = new Pool({
     user: process.env.DB_USER || 'postgres',
@@ -25,9 +26,10 @@ export const getProcurements = async (): Promise<Procurement[]> => {
     const client = await pool.connect();
     try {
         const result = await client.query('SELECT * FROM procurements');
+        console.log('result:', result.rows);
         return result.rows.map(row => ({
             ...row,
-            createdAt: new Date(row.createdAt)}));
+            createdAt: row.createdat}));
     } finally {
         client.release();
     }
@@ -51,13 +53,51 @@ export const cleanup = async () => {
     await pool.end();
 };
 
-export const fetchInventoryData = async (): Promise<any> => {
+export const fetchInventoryData = async () => {
     try {
-        const response = await axios.get("https://6780ed5385151f714b0887a4.mockapi.io/localhost3002/inventory");
-        console.log ('response:', JSON.stringify(response.data));
+        console.log ("fetching inventory data from: ", mockInventory);
+        const response = await axios.get(mockInventory);
+        console.log('response:', response.data);
         return response.data; // Return structured data from the external API
     } catch (error) {
         console.error('Error fetching external data:', error);
         throw new Error('Failed to fetch data from external API');
     }
 };
+
+export const getFilteredQuantityProcurements= async(minQuantity: number): Promise<Procurement[]> => {
+    const client = await pool.connect();
+    try {
+        const result = await client.query(
+            `SELECT DISTINCT ON (p.id) p.*
+            FROM procurements p,
+            jsonb_array_elements(p.items::jsonb) AS item
+            WHERE (item->>'quantity')::int >= $1`,
+            [minQuantity] // Pass minQuantity as a parameter
+        );
+        return result.rows.map(row => ({
+            ...row,
+            createdAt: row.createdat
+        })); 
+    } finally {
+        client.release();
+    }
+}
+
+export const getFilteredStatusProcurements = async (status: string): Promise<Procurement[]> => {
+    const client = await pool.connect();
+    try {
+        const result = await client.query(
+            `SELECT DISTINCT ON (p.id) p.*
+            FROM procurements p
+            WHERE p.status = $1`, // Filter by status
+            [status] // Pass status as a parameter
+        );
+        return result.rows.map(row => ({
+            ...row,
+            createdAt: row.createdat
+        }));
+    } finally {
+        client.release();
+    }
+}

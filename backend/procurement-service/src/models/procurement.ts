@@ -6,5 +6,5 @@ export interface Procurement {
     description: string;
     items: { itemName: string; quantity: number }[];
     status: ProcurementStatus;
-    createdAt: Date;
+    createdat: Date;
 }

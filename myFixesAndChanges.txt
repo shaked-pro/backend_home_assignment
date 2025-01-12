@@ -1,7 +1,13 @@
 hey team , wanted to explain my fixes.
 
-1.firstly when looking at the "procurment" model I could see that the "createdAt" field is a date object.
-  the result that is being returned in the "get procurenment" by the ".query" function is of string type.
-
-  since "createdAt" is a date object and ts is refering to it as a string it gets corrupted and becomes invalid.  
-  I mapped the response and for every row I returned a date object with the "cretedAt" field :) 
+1.firstly when looking at the "procurment" model I could see that the "createdAt" field is a date object. which means it doesn't need any casting,
+  when I looked at the data coming from the backend I noticed that the "createdAt" field is called "cretedat" (lowecase 'a'). At that point I can either change the model 
+  and the db and every other mention of createdAt to cretedat or, when fetching the rows I will map them and change the "createdat" field to "createdAt".  
+  I chose to map the rows when I am returning the data. 
+  In a real scenario I would opt for the second option and to refactor it, asking the team leader which case to use and to make sure it doesn;t impact other services or functionalities. 
+  The mapping is inefficient and in large scale it would flop.
+2.I chose mockapi.io to create an inventory resource and put some mock data inside, in the end I creted an endpoint of localhost:3002/api/procurments/inventoryLevels when the get request
+  is sent that endpoint will return the relevant "inventory" data.*used axios for the requests.  
+4.I implemented the minQuantiy filter by integrating the param into the url (for example : http://localhost:3002/api/procurements/filter-by-quantity?minQuantity=70). I sent those requests
+  via postman to see the results. I sent an SQL query to the DB and added a condition using the keyword "WHERE". I did the same with filter-by-status.	
+  
