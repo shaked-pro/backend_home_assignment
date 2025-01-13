@@ -8,6 +8,10 @@ hey team , wanted to explain my fixes.
   The mapping is inefficient and in large scale it would flop.
 2.I chose mockapi.io to create an inventory resource and put some mock data inside, in the end I creted an endpoint of localhost:3002/api/procurments/inventoryLevels when the get request
   is sent that endpoint will return the relevant "inventory" data.*used axios for the requests. I used the field inventoryLevel for declaring priority. 
+3.I solved this task by creating a local jsonServer running on port 3000 and populating it with mock data. created the endpoint http://localhost:3001/api/vendors/:id/procurments/create
+  and then sending a post request to the procurementController with the data from my json server. Added the data to the database. I updated the addProcurement function as it again used
+  created_at instead of createdAt (according to the schema). For viewing the filtered data by vendor id i created the endpoint http://localhost:3001/api/vendors/:id/procurments/view. I 
+  send a request from the vendor controller to the procurements controller and used the procurements service to get the right data.  
 4.I implemented the minQuantiy filter by integrating the param into the url (for example : http://localhost:3002/api/procurements/filter-by-quantity?minQuantity=70). I sent those requests
   via postman to see the results. I sent an SQL query to the DB and added a condition using the keyword "WHERE". I did the same with filter-by-status.	
   

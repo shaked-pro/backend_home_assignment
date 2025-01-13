@@ -3,6 +3,7 @@ import express from 'express';
 import { checkVendorData } from '../models/vendor';
 import { getVendors, addVendor, getVendorPercurmentsById } from '../services/vendorService';
 import { Request, Response } from 'express';
+import axios from 'axios';
 
 const router = express.Router();
 
@@ -40,10 +41,32 @@ router.post('/', async (req, res) => {
     
 });
 
-router.get('/:id/procurments', async (req: Request, res:Response) => {
-    const vendorId = req.params.id; // Get vendor ID from URL parameter
-    let vendor = getVendorPercurmentsById(vendorId);
-    return res.json(vendor);
+router.get('/:id/procurments/create', async (req: Request, res:Response) => {
+    try {
+        const vendorId = req.params.id; // Get vendor ID from URL parameter
+        let vendor = getVendorPercurmentsById(vendorId);
+        res.json(vendor);
+    }catch (error: unknown) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: error.message });
+        } else {
+            res.status(500).json({ error: 'Unknown error occurred' });
+        }
+    }
+});
+
+router.get('/:id/procurments/view', async (req: Request, res: Response) => {
+    try {
+        const vendorId = req.params.id; // Get vendor ID from URL parameter
+        const procurments = await axios.get(`http://host.docker.internal:3002/api/procurements/filter-by-vendorId/${vendorId}`);
+        return res.json(procurments.data);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: error.message });
+        } else {
+            res.status(500).json({ error: 'Unknown error occurred' });
+        }
+    }
 });
     
 

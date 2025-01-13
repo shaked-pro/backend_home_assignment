@@ -27,13 +27,11 @@ export const addVendor = async (vendor: Partial<Vendor>): Promise<Vendor> => {
 };
 
 export const getVendorPercurmentsById = async (vendorId: string) =>{
-    const client = await pool.connect();
-
     try {
         // Fetch vendor data from mock API and type the response
         let intVendorId = parseInt(vendorId);
         intVendorId = intVendorId-1; //since the vendor id starts from 1 and the array index starts from 0
-        let response = await axios.get(`http://host.docker.internal:3000/${vendorId}`);
+        let response = await axios.get(`http://host.docker.internal:3000/${intVendorId}`);
         let vendor = response.data as { procurements: { id: string, title: string, description: string, items: any[] }[] };
         intVendorId = intVendorId+1; //adjusting back to the original vendor id
 
@@ -56,8 +54,9 @@ export const getVendorPercurmentsById = async (vendorId: string) =>{
     } catch (error) {
         console.error('Error inserting mock data:', error);
         throw new Error('Failed to insert mock data');
-    } finally {
-        client.release();
-    }
+    } 
 };
 
+// export const getFilteredProcurementsByVendor = async (vendorId: string) => {
+
+// }

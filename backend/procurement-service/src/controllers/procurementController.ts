@@ -1,5 +1,5 @@
 import express from 'express';
-import { getProcurements, addProcurement, fetchInventoryData, getFilteredQuantityProcurements, getFilteredStatusProcurements } from '../services/procurementService';
+import { getProcurements, addProcurement, fetchInventoryData, getFilteredQuantityProcurements, getFilteredStatusProcurements, getFilteredProcurementsByVendor } from '../services/procurementService';
 import { ProcurementStatus } from '../models/ProcurementStatus';
 import { min } from 'date-fns';
 
@@ -83,6 +83,21 @@ router.get('/filter-by-status', async (req, res) => {
         }
     }
 }); //task 4
+
+//Get   /api/procurements
+router.get('/filter-by-vendorId/:id', async (req, res) => {
+    try {
+        const vendorId = parseInt(req.params.id, 10);
+        const procurments = await getFilteredProcurementsByVendor(vendorId);
+        return res.json(procurments);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: error.message });
+        } else {
+            res.status(500).json({ error: 'Unknown error occurred' });
+        }
+    }
+}); 
 
 
 export default router;

@@ -44,6 +44,7 @@ export const addProcurement = async (procurement: Partial<Procurement>): Promise
             [title, description, JSON.stringify(items), status || ProcurementStatus.OPEN, new Date() , vendor_id]
         );
         return result.rows[0];
+
     } finally {
         client.release();
     }
@@ -101,3 +102,17 @@ export const getFilteredStatusProcurements = async (status: string): Promise<Pro
         client.release();
     }
 }
+
+export const getFilteredProcurementsByVendor = async (vendor_id:number): Promise<Procurement[]> => {
+    const client = await pool.connect();
+    try {
+        const result = await client.query('SELECT * FROM procurements WHERE vendor_id = $1', [vendor_id]);
+        console.log('result:', result.rows);
+        return result.rows.map(row => ({
+            ...row,
+            createdAt: row.createdat
+        }));
+    } finally {
+        client.release();
+    }
+};
