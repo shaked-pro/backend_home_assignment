@@ -38,10 +38,10 @@ export const getProcurements = async (): Promise<Procurement[]> => {
 export const addProcurement = async (procurement: Partial<Procurement>): Promise<Procurement> => {
     const client = await pool.connect();
     try {
-        const { title, description, items, status } = procurement;
+        const { title, description, items, status, vendor_id } = procurement;
         const result = await client.query(
-            'INSERT INTO procurements (title, description, items, status, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [title, description, JSON.stringify(items), status || ProcurementStatus.OPEN, new Date()]
+            'INSERT INTO procurements (title, description, items, status,  createdAt ,vendor_id) VALUES ($1, $2, $3, $4, $5 , $6) RETURNING *',
+            [title, description, JSON.stringify(items), status || ProcurementStatus.OPEN, new Date() , vendor_id]
         );
         return result.rows[0];
     } finally {

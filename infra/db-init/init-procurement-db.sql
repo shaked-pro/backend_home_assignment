@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS procurements (
     description TEXT,
     items JSON NOT NULL,
     status VARCHAR(50) DEFAULT 'open',
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vendor_id INT 
 );
 
 INSERT INTO procurements (title, description, items, status) VALUES

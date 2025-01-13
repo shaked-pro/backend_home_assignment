@@ -1,7 +1,7 @@
 [
     {
         "id": 1,
-        "procurments": [
+        "procurements": [
             {
                 "id": "5",
                 "title": "purchase Request 5",
@@ -61,7 +61,7 @@
     },
     {
         "id": 2,
-        "procurments": [
+        "procurements": [
             {
                 "id": "10",
                 "title": "purchase Request 10",
