@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { Client, Pool } from 'pg';
 import { Vendor } from '../models/vendor';
 import axios from 'axios';
 
@@ -56,6 +56,19 @@ export const getVendorPercurmentsById = async (vendorId: string) =>{
         throw new Error('Failed to insert mock data');
     } 
 };
+
+// export const getRelevantVendorIdByCertificationAndRating = async (certification: string, rating: number) => {
+//     const client = await pool.connect();
+//     try {
+//         const result = await client.query('SELECT id FROM vendors WHERE certifications @> $1::TEXT[] AND rating >= $2', [[certification], rating]);
+//         if (!result.rows || result.rows.length === 0) {
+//             throw new Error('No vendors found');
+//         }
+//         return result.rows.map(row => row.id);
+//     } finally {
+//         client.release();
+//     }
+// } 
 
 // export const getFilteredProcurementsByVendor = async (vendorId: string) => {
 

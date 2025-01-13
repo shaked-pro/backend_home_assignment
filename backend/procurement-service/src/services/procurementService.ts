@@ -116,3 +116,23 @@ export const getFilteredProcurementsByVendor = async (vendor_id:number): Promise
         client.release();
     }
 };
+
+// export const getFilteredProcurementsByCertificationAndRating = async (certification: string, rating: number): Promise<Procurement[]> => {
+//     const client = await pool.connect();
+//     console.log ("got here too certification: "+certification+" rating: "+rating);
+//     try {
+//         let response = await axios.get<Number[]>(`http://host.docker.internal:3001/api/vendors/${certification}/${rating}`);
+//         const vendorIds= response.data; // Ensure IDs are integers
+//         console.log('vendorIds:', vendorIds);
+//         if (vendorIds.length === 0) {
+//             return []; // No vendors found, return an empty array
+//         }
+//         let result = await client.query('SELECT * FROM procurements WHERE vendor_id = ANY($1)', [vendorIds]);
+//         return result.rows.map(row => ({
+//             ...row,
+//             createdAt: row.createdat
+//         }));
+//     } finally {
+//         client.release();
+//     }
+// }

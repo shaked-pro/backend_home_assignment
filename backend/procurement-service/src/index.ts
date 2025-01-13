@@ -6,7 +6,8 @@ const PORT = process.env.PORT || 3002;
 
 app.use('/inventoryLevels', procurementController);// inventory data task number 2 
 app.use('/filter-by-quantity' , procurementController);//filter procurements by quantity. task 4
-app.use('/filter-by-status',procurementController);
+app.use('/filter-by-status',procurementController);//task 4
+//app.use('/filter-by-certification-and-rating',procurementController) //Bonus task
 
 app.get('/', (req, res) => res.send('Procurement Service is running!'));
 

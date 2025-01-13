@@ -99,5 +99,20 @@ router.get('/filter-by-vendorId/:id', async (req, res) => {
     }
 }); 
 
+// router.get('/filter-by-certification-and-rating' ,async (req, res) => {
+//     try {
+//         console.log ("inside filter by certification and rating in the controller");
+//         const certification = req.query.certification as string;
+//         const rating = parseFloat(req.query.rating as string);
+//         const procurments = await getFilteredProcurementsByCertificationAndRating(certification, rating);
+//         return res.json(procurments);
+//     } catch (error: unknown) {
+//         if (error instanceof Error) {
+//             res.status(500).json({ error: error.message });
+//         } else {
+//             res.status(500).json({ error: 'Unknown error occurred' });
+//         }
+//     }
+// });
 
 export default router;

@@ -68,6 +68,22 @@ router.get('/:id/procurments/view', async (req: Request, res: Response) => {
         }
     }
 });
+
+// router.get('/:certification/:rating', async (req: Request, res: Response) => {
+//     try {
+//         const Certification = req.params.certification;
+//         const Rating = req.params.rating; 
+//         const NumberRating = parseInt(Rating);
+//         const vendorIds = getRelevantVendorIdByCertificationAndRating(Certification, NumberRating);
+//         return res.json(vendorIds);
+//     } catch (error: unknown) {
+//         if (error instanceof Error) {
+//             res.status(500).json({ error: error.message });
+//         } else {
+//             res.status(500).json({ error: 'Unknown error occurred' });
+//         }
+//     }
+// });
     
 
 export default router;
